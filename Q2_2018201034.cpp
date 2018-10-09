@@ -17,54 +17,22 @@ typedef struct node_tree
 
 btreeNode *root;
 
-// takes value and adds it into btree.
 void btree_insert(long long);
-
-//does searching for finding proper node which contains 'value'.
 bool findNodeToInsert(long long, long long *, btreeNode *, btreeNode **);
-
-//creates node and sets value in node.
 btreeNode *createNewNode(long long, btreeNode *);
-
-//divide node into two parts of nearly same length..
 void split(long long, long long *, long long, btreeNode *, btreeNode *, btreeNode **);
-
-//add value to given position by shifting values after position to one step right.
 void addVal(long long, long long, btreeNode *, btreeNode *);
-
-//finds inorder successor and replaces with given node.
 void ino_suc(btreeNode *, long long);
-
-//remove value from leaf node.
 void rm_val(btreeNode *, long long);
-
-//perform right shift on given node.
 void do_rsh(btreeNode *, long long);
-
-//performs left shift on given node.
 void do_lsh(btreeNode *, long long);
-
-//merge two leaf nodes.
 void mergeNodes(btreeNode *, long long);
-
-//adjust nodes of two different level.
 void adjst_node(btreeNode *, long long);
-
-//does searching for finding proper node which contains 'value'.
 bool findNodeToDelete(long long, btreeNode *myNode);
-
-//deletes node with 'value' from btree
 void del_node(long long, btreeNode *);
-
-//Tells if perticuler node exist in btree or not.
 void btree_search(long long, btreeNode *);
-
-//B-Tree inOrder traversal
 void inOrder(btreeNode *);
 
-/*************************************
- *          Main Function            *
- *************************************/
 int main()
 {
     long long value, choice;
@@ -218,7 +186,7 @@ void ino_suc(btreeNode *myNode, long long pos)
 
 /* removes the value from the given node (leaf node) and rearrange other values */
 void rm_val(btreeNode *myNode, long long pos)
-{   //left shift all values from pos+1 to end.
+{ //left shift all values from pos+1 to end.
     long long i = pos + 1;
     while (i <= myNode->size)
     {
@@ -234,7 +202,7 @@ void do_rsh(btreeNode *myNode, long long pos)
 {
     btreeNode *x = myNode->link[pos];
     long long j = x->size;
-    
+
     while (j > 0)
     {
         x->val[j + 1] = x->val[j];
@@ -283,7 +251,7 @@ void mergeNodes(btreeNode *myNode, long long pos)
 
     left_child->size++;
     left_child->val[left_child->size] = myNode->val[pos];
-    
+
     while (j <= rt_child->size)
     { //taking data from right child if any data exist and putting in left child.
         left_child->size++;
@@ -306,15 +274,15 @@ void mergeNodes(btreeNode *myNode, long long pos)
 void adjst_node(btreeNode *myNode, long long pos)
 {
     if (pos == 0)
-    {   //if left mdst link then check only in right sibling.
+    {                                   //if left mdst link then check only in right sibling.
         if (myNode->link[1]->size > MN) //right sibling has sufficient data, then perform shift
             do_lsh(myNode, 1);
         else
-            mergeNodes(myNode, 1);  //if right sibling has not sufficient data then merge.
+            mergeNodes(myNode, 1); //if right sibling has not sufficient data then merge.
     }
     else
     {
-        if (myNode->size != pos)    //if intermediate node then check left sibling then right sibling and if not possible then do merge.
+        if (myNode->size != pos) //if intermediate node then check left sibling then right sibling and if not possible then do merge.
         {
             if (myNode->link[pos - 1]->size > MN)
                 do_rsh(myNode, pos);
@@ -326,12 +294,12 @@ void adjst_node(btreeNode *myNode, long long pos)
                     mergeNodes(myNode, pos);
             }
         }
-        else    //if rightmost child then check only left sibling
+        else //if rightmost child then check only left sibling
         {
-            if (myNode->link[pos - 1]->size > MN)   //left sibling has sufficient data, then perform shift
+            if (myNode->link[pos - 1]->size > MN) //left sibling has sufficient data, then perform shift
                 do_rsh(myNode, pos);
             else
-                mergeNodes(myNode, pos);    //if left sibling has not sufficient data then merge.
+                mergeNodes(myNode, pos); //if left sibling has not sufficient data then merge.
         }
     }
 }
