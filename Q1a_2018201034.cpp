@@ -64,8 +64,9 @@ vll create_sfx_arr(string s)
         sort(sfx_val.begin(), sfx_val.end(), cmp_func);
     }
     vll result;
-    for(auto i: sfx_val ){
-        result.push_back( i.first );
+    for (auto i : sfx_val)
+    {
+        result.push_back(i.first);
     }
     return result;
 }
@@ -80,6 +81,6 @@ int main()
     // cout << endl;
 
     ll smallest = ans[0];
-    cout << s.substr(smallest) << s.substr(0,smallest);
+    cout << s.substr(smallest) << s.substr(0, smallest);
     return 0;
 }
