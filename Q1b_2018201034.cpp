@@ -1,5 +1,6 @@
 // @auther : Rushit Jasani
-// problem : implementation of Suffix array Q1.
+// problem : implementation of Suffix array Q2.
+
 
 #include <bits/stdc++.h>
 using namespace std;
@@ -17,13 +18,12 @@ int cmp_func(pair<ll, pll> a, pair<ll, pll> b)
 
 vll create_sfx_arr(string s)
 {
-    // cout << s << endl;
     ll n = s.size();
     vector<pair<ll, pll>> sfx_val(n);
     vll index(n);
-    for (ll i = 0; i < n; i++)      
+    for (ll i = 0; i < n; i++)
     {
-        ll rank = s[i] - '0';           
+        ll rank = s[i] - '0';
         ll next_rank = -1;
         if (i + 1 < n)
             next_rank = s[i + 1] - '0';
@@ -76,18 +76,23 @@ vll create_sfx_arr(string s)
 int main()
 {
     string s;
-    cin >> s;
+    ll k;
+    cin >> s >> k;
     ll n = s.size();
-    s += s;
     vll ans = create_sfx_arr(s);
-
-    ll smallest = ans[0];
-    for(auto i:ans){
-        if( i < n ) {
-            smallest = i;
-            break;
-        }
+    ll longest=-1;
+    for( ll i=0; i < ( n - k +1 ) ; i++  ){
+        ll j=i+k-1;
+        ll count=0;
+        ll p_i = ans[i];
+        ll p_j = ans[j];
+        while( (p_j < n) && ( p_i < n ) && s[p_i] == s[p_j]){
+            count++;
+            p_i++;
+            p_j++;
+        } 
+        if( count != 0 && longest < count ) longest = count;
     }
-    cout << s.substr( smallest, n);
+    cout << longest << endl;
     return 0;
 }

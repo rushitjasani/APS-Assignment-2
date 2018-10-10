@@ -21,9 +21,9 @@ vll create_sfx_arr(string s)
     ll n = s.size();
     vector<pair<ll, pll>> sfx_val(n);
     vll index(n);
-    for (ll i = 0; i < n; i++)      
+    for (ll i = 0; i < n; i++)
     {
-        ll rank = s[i] - '0';           
+        ll rank = s[i] - '0';
         ll next_rank = -1;
         if (i + 1 < n)
             next_rank = s[i + 1] - '0';
@@ -75,19 +75,6 @@ vll create_sfx_arr(string s)
 
 int main()
 {
-    string s;
-    cin >> s;
-    ll n = s.size();
-    s += s;
-    vll ans = create_sfx_arr(s);
-
-    ll smallest = ans[0];
-    for(auto i:ans){
-        if( i < n ) {
-            smallest = i;
-            break;
-        }
-    }
-    cout << s.substr( smallest, n);
+    
     return 0;
 }

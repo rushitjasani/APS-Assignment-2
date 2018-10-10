@@ -19,13 +19,12 @@ btreeNode *createNewNode(long long, btreeNode *);
 void btree_insert(long long);
 bool findNodeToInsert(long long, long long *, btreeNode *, btreeNode **);
 void split(long long, long long *, long long, btreeNode *, btreeNode *, btreeNode **);
-void addVal(long long, long long, btreeNode *, btreeNode *);
 void rm_val(btreeNode *, long long);
 void do_rsh(btreeNode *, long long);
 void do_lsh(btreeNode *, long long);
 void mergeNodes(btreeNode *, long long);
 void adjst_node(btreeNode *, long long);
-bool findNodeToDelete(long long, btreeNode *myNode);
+bool findNodeToDelete(long long, btreeNode *);
 void del_node(long long, btreeNode *);
 void btree_search(long long, btreeNode *);
 void inOrder(btreeNode *);
@@ -76,7 +75,6 @@ btreeNode *createNewNode(long long data, btreeNode *child)
     newNode->val[1] = data;
     newNode->link[0] = root;
     newNode->link[1] = child;
-    
     return newNode;
 }
 
@@ -88,42 +86,40 @@ bool findNodeToInsert(long long v, long long *p_v, btreeNode *node, btreeNode **
         *link = NULL;
         return true;
     }
-    long long child;
+    long long pos;
     if (v < node->val[1])
-        child = 0;
+        pos = 0;
     else
     {
-        child = node->size;
-        while (v < node->val[child] && child > 1)
-            child--;
-        if (v == node->val[child])
+        pos = node->size;
+        while (v < node->val[pos] && pos > 1)
+            pos--;
+        if (v == node->val[pos])
             return false;
     }
-    if (findNodeToInsert(v, p_v, node->link[child], link))
+    if (findNodeToInsert(v, p_v, node->link[pos], link))
     {
         if ((node->size) < MX)
-            addVal(*p_v, child, node, *link);
+        {
+            long long j = node->size;
+            while (j > pos)
+            {
+                node->val[j + 1] = node->val[j];
+                node->link[j + 1] = node->link[j];
+                j--;
+            }
+            node->val[j + 1] = *p_v;
+            node->link[j + 1] = *link;
+            node->size++;
+            return false;
+        }
         else
         {
-            split(*p_v, p_v, child, node, *link, link);
+            split(*p_v, p_v, pos, node, *link, link);
             return true;
         }
     }
     return false;
-}
-
-void addVal(long long val, long long pos, btreeNode *node, btreeNode *child)
-{
-    long long j = node->size;
-    while (j > pos)
-    {
-        node->val[j + 1] = node->val[j];
-        node->link[j + 1] = node->link[j];
-        j--;
-    }
-    node->val[j + 1] = val;
-    node->link[j + 1] = child;
-    node->size++;
 }
 
 void split(long long val, long long *pval, long long pos, btreeNode *node, btreeNode *child, btreeNode **newNode)
@@ -134,7 +130,7 @@ void split(long long val, long long *pval, long long pos, btreeNode *node, btree
     else
         mid = MN;
 
-    *newNode = (btreeNode *)malloc(sizeof(btreeNode));
+    *newNode = new btreeNode;
     j = mid + 1;
     while (j <= MX)
     {
@@ -146,25 +142,36 @@ void split(long long val, long long *pval, long long pos, btreeNode *node, btree
     (*newNode)->size = MX - mid;
 
     if (pos <= MN)
-        addVal(val, pos, node, child);
+    {
+        long long j = node->size;
+        while (j > pos)
+        {
+            node->val[j + 1] = node->val[j];
+            node->link[j + 1] = node->link[j];
+            j--;
+        }
+        node->val[j + 1] = val;
+        node->link[j + 1] = child;
+        node->size++;
+    }
     else
-        addVal(val, pos - mid, *newNode, child);
+    {
+        long long j = node->size;
+        while (j > (pos - mid))
+        {
+            (*newNode)->val[j + 1] = (*newNode)->val[j];
+            (*newNode)->link[j + 1] = (*newNode)->link[j];
+            j--;
+        }
+        (*newNode)->val[j + 1] = val;
+        (*newNode)->link[j + 1] = child;
+        (*newNode)->size++;
+    }
+
     *pval = node->val[node->size];
     (*newNode)->link[0] = node->link[node->size];
     node->size--;
     return;
-}
-
-void rm_val(btreeNode *myNode, long long pos)
-{
-    long long i = pos + 1;
-    while (i <= myNode->size)
-    {
-        myNode->val[i - 1] = myNode->val[i];
-        myNode->link[i - 1] = myNode->link[i];
-        i++;
-    }
-    myNode->size--;
 }
 
 void do_rsh(btreeNode *myNode, long long pos)
@@ -241,6 +248,7 @@ void mergeNodes(btreeNode *myNode, long long pos)
 
 void adjst_node(btreeNode *myNode, long long pos)
 {
+
     if (pos == 0)
     {
         if (myNode->link[1]->size > MN)
@@ -248,24 +256,21 @@ void adjst_node(btreeNode *myNode, long long pos)
         else
             mergeNodes(myNode, 1);
     }
+    else if (pos == myNode->size)
+    {
+        if (myNode->link[pos - 1]->size > MN)
+            do_rsh(myNode, pos);
+        else
+            mergeNodes(myNode, pos);
+    }
     else
     {
-        if (myNode->size != pos)
-        {
-            if (myNode->link[pos - 1]->size > MN)
-                do_rsh(myNode, pos);
-            else
-            {
-                if (myNode->link[pos + 1]->size > MN)
-                    do_lsh(myNode, pos + 1);
-                else
-                    mergeNodes(myNode, pos);
-            }
-        }
+        if (myNode->link[pos - 1]->size > MN)
+            do_rsh(myNode, pos);
         else
         {
-            if (myNode->link[pos - 1]->size > MN)
-                do_rsh(myNode, pos);
+            if (myNode->link[pos + 1]->size > MN)
+                do_lsh(myNode, pos + 1);
             else
                 mergeNodes(myNode, pos);
         }
@@ -276,7 +281,7 @@ bool findNodeToDelete(long long val, btreeNode *myNode)
 {
     long long pos;
     bool flag = false;
-    if (myNode)
+    if (myNode != NULL)
     {
         if (val < myNode->val[1])
         {
@@ -306,7 +311,16 @@ bool findNodeToDelete(long long val, btreeNode *myNode)
                     cout << "Data not present" << endl;
             }
             else
-                rm_val(myNode, pos);
+            {
+                long long i = pos + 1;
+                while (i <= myNode->size)
+                {
+                    myNode->val[i - 1] = myNode->val[i];
+                    myNode->link[i - 1] = myNode->link[i];
+                    i++;
+                }
+                myNode->size--;
+            }
         }
         else
             flag = findNodeToDelete(val, myNode->link[pos]);
@@ -320,12 +334,7 @@ bool findNodeToDelete(long long val, btreeNode *myNode)
 void del_node(long long val, btreeNode *myNode)
 {
     btreeNode *tmp;
-    if (!findNodeToDelete(val, myNode))
-    {
-        cout << "Not Found" << endl;
-        return;
-    }
-    else
+    if (findNodeToDelete(val, myNode))
     {
         if (myNode->size == 0)
         {
@@ -334,44 +343,49 @@ void del_node(long long val, btreeNode *myNode)
             free(tmp);
         }
     }
+    else
+    {
+        cout << "Not Found" << endl;
+        return;
+    }
     root = myNode;
     return;
 }
 
-void btree_search(long long val, btreeNode *myNode)
+//Recursive Search function.
+void btree_search(long long val, btreeNode *x)
 {
-
-    if (myNode == NULL)
+    if (x == NULL)
         return;
     long long pos;
-    if (val < (myNode->val[1]))
+    if (val < (x->val[1]))
         pos = 0;
     else
     {
-        pos = myNode->size;
-        while (val < myNode->val[pos] && pos > 1)
+        pos = x->size;
+        while (val < x->val[pos] && pos > 1)
             pos--;
-        if (val == myNode->val[pos])
+        if (val == x->val[pos])
         {
             cout << val << " is present" << endl;
             return;
         }
     }
-    btree_search(val, myNode->link[pos]);
+    btree_search(val, x->link[pos]);
     return;
 }
 
-void inOrder(btreeNode *myNode)
+void inOrder(btreeNode *x)
 {
     int i;
-    if (myNode)
+    if (x)
     {
-        for (i = 0; i < myNode->size; i++)
+        for (i = 0; i < x->size; i++)
         {
-            inOrder(myNode->link[i]);
-            cout << myNode->val[i + 1] << " ";
+            inOrder(x->link[i]);
+            cout << x->val[i + 1] << " ";
         }
-        inOrder(myNode->link[i]);
+        inOrder(x->link[i]);
     }
     return;
 }
