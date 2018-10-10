@@ -84,7 +84,6 @@ stringBuilder stringAppend(stringBuilder x, stringBuilder y)
 
 void print(stringBuilder s)
 {
-
     ll_node *tmp = s.head;
     while (tmp != NULL)
     {
@@ -96,35 +95,40 @@ void print(stringBuilder s)
 
 ll findSubstring_kmp(const char *s, const char *pattern)
 {
-    ll str_len = strlen(s);         //length of string
-    ll pat_len = strlen(pattern);   //length of pattern
-    //handleing edge casaes.
+    ll str_len = strlen(s);
+    ll pat_len = strlen(pattern);
+
     if (pat_len == 0)
         return -1;
     if (pat_len > str_len)
         return -1;
 
-    vector<ll> partial_match_table(pat_len + 1, 0);
-    for (ll i = 1; i < pat_len; i++)
+    vector<ll> partial_match_table(pat_len, 0);
+    for (ll i = 1, j = 0; i < pat_len; i++)
     {
-        ll j = partial_match_table[i + 1];
         while (j > 0 && pattern[i] != pattern[j])
-            j = partial_match_table[j];
-        if (j > 0 || pattern[i] == pattern[j])
-            partial_match_table[i + 1] = j + 1;
+        {
+            j = partial_match_table[j - 1];
+        }
+        if (pattern[i] == pattern[j])
+        {
+            j++;
+            partial_match_table[i] = j;
+        }
+        else
+        {
+            partial_match_table[i] = j;
+        }
     }
     ll i = 0, j = 0;
     for (; i < str_len; i++)
     {
-        if (s[i] == pattern[j])
-        {
-            if (++j == pat_len)
-                return (i - j + 1);
+        while( j>0 && pattern[j]!=s[i] ){
+            j = partial_match_table[j-1];
         }
-        else if (j > 0)
-        {
-            j = partial_match_table[j];
-            i--;
+        if( s[i] == pattern[j] )j++;
+        if( j == pat_len ){
+            return (i+1) - j; 
         }
     }
     return -1;
@@ -165,27 +169,27 @@ ll findSubstring(stringBuilder &s, const char *pattern)
 int main()
 {
     stringBuilder s1 = stringInitialize("abca");
-    print(s1);
-    stringBuilder s2 = stringInitialize("abab");
-    print(s2);
+    // print(s1);
+    stringBuilder s2 = stringInitialize("assssaabab");
+    // print(s2);
     stringBuilder s3 = stringInitialize("rushit");
-    print(s3);
+    // print(s3);
     stringBuilder s4 = stringInitialize("darshan");
-    print(s4);
+    // print(s4);
     stringBuilder s5 = stringAppend(s1, s2);
-    print(s5);
+    // print(s5);
     stringBuilder s6, s7;
     s1 = stringAppend(s6, s7);
-    print(s1);
+    // print(s1);
     s2 = stringAppend(s1, s2);
-    print(s2);
+    // print(s2);
     s2 = stringAppend(s2, s5);
-    print(s2);
-    ll x = findSubstring(s2, "aabab");
-    print(s2);
+    // print(s2);
+    ll x = findSubstring(s2, "abca");
+    // print(s2);
     cout << x << endl;
     ll y = findSubstring(s2, "orla");
-    print(s2);
+    // print(s2);
     cout << y << endl;
     return 0;
 }

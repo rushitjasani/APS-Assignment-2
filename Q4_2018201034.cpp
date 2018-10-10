@@ -1,5 +1,5 @@
 // @auther : Rushit Jasani
-// problem : implementation of unordered set 
+// problem : implementation of unordered set
 #include <bits/stdc++.h>
 using namespace std;
 #define BKT 5
@@ -22,9 +22,7 @@ class Unordered_map
     Unordered_map()
     {
         for (long long i = 0; i < BKT; i++)
-        {
             my_map[i] = NULL;
-        }
     }
 
     long long calculateHash(T key)
@@ -65,9 +63,7 @@ class Unordered_map
         else if (head->next == NULL)
         {
             if (head->key == key)
-            {
                 return;
-            }
             else
             {
                 node *newNode = getNode(key, value);
@@ -227,7 +223,7 @@ int main()
             continue;
         }
         }
-        x.print_all_LL();
+        // x.print_all_LL();
         cout << endl;
     }
     return 0;

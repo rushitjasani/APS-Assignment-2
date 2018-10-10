@@ -1,3 +1,6 @@
+// @auther : Rushit Jasani
+// problem : implementation of Suffix array.
+
 #include <bits/stdc++.h>
 using namespace std;
 #define ll long long
@@ -30,7 +33,6 @@ vll create_sfx_arr(string s)
 
     for (ll k = 4; k < (n << 1); k <<= 1)
     {
-
         ll r = 0;
         ll p_r = sfx_val[0].second.first;
         sfx_val[0].second.first = r;
@@ -38,8 +40,7 @@ vll create_sfx_arr(string s)
 
         for (ll i = 1; i < n; i++)
         {
-            if (sfx_val[i].second.first == p_r &&
-                sfx_val[i].second.second == sfx_val[i - 1].second.second)
+            if (sfx_val[i].second.first == p_r && sfx_val[i].second.second == sfx_val[i - 1].second.second)
             {
                 p_r = sfx_val[i].second.first;
                 sfx_val[i].second.first = r;
@@ -76,10 +77,6 @@ int main()
     string s;
     cin >> s;
     vll ans = create_sfx_arr(s);
-    // for (auto i : ans)
-    //     cout << i << " ";
-    // cout << endl;
-
     ll smallest = ans[0];
     cout << s.substr(smallest) << s.substr(0, smallest);
     return 0;

@@ -8,7 +8,6 @@ ll partition_my(vector<ll> &arr, ll low, ll high)
 {
     ll rand_num = low + (rand()) % (high - low + 1);
     swap(arr[rand_num], arr[low]);
-
     ll i = low + 1;
     ll piv = arr[low];
     for (ll j = low + 1; j <= high; j++)
@@ -57,18 +56,18 @@ int main()
     if ((k > n) || k <= 0)
     {
         printf("-1\n");
-        // continue;
+        exit( EXIT_FAILURE );
     }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////
     clock_t begin = clock();
-    nth_element_my(arr, k - 1);
+    nth_element_my(arr, k-1 );
     clock_t end = clock();
     cout << "Time Elapsed: " << 1.0 * (end - begin) / CLOCKS_PER_SEC << " sec\n";
 /////////////////////////////////////////////////////////////////////////////////////////////////////
     clock_t begin1 = clock();
 
-    nth_element(arr1.begin(), arr1.begin() + k-1 , arr1.end());
+    nth_element(arr1.begin(), arr1.begin() + k-1  , arr1.end());
     printf("%lld\n", arr1[k-1]);
 
     clock_t end1 = clock();
