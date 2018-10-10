@@ -107,29 +107,24 @@ ll findSubstring_kmp(const char *s, const char *pattern)
     for (ll i = 1, j = 0; i < pat_len; i++)
     {
         while (j > 0 && pattern[i] != pattern[j])
-        {
             j = partial_match_table[j - 1];
-        }
         if (pattern[i] == pattern[j])
         {
             j++;
             partial_match_table[i] = j;
         }
         else
-        {
             partial_match_table[i] = j;
-        }
     }
     ll i = 0, j = 0;
     for (; i < str_len; i++)
     {
-        while( j>0 && pattern[j]!=s[i] ){
-            j = partial_match_table[j-1];
-        }
-        if( s[i] == pattern[j] )j++;
-        if( j == pat_len ){
-            return (i+1) - j; 
-        }
+        while (j > 0 && pattern[j] != s[i])
+            j = partial_match_table[j - 1];
+        if (s[i] == pattern[j])
+            j++;
+        if (j == pat_len)
+            return (i + 1) - j;
     }
     return -1;
 }
