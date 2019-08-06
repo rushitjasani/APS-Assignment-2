@@ -1,5 +1,6 @@
 // @auther : Rushit Jasani
-// problem : implementation of Suffix array Q1.
+// problem : implementation of Suffix array Q2.
+
 
 #include <bits/stdc++.h>
 using namespace std;
@@ -17,7 +18,6 @@ int cmp_func(pair<ll, pll> a, pair<ll, pll> b)
 
 vll create_sfx_arr(string s)
 {
-    // cout << s << endl;
     ll n = s.size();
     vector<pair<ll, pll>> sfx_val(n);
     vll index(n);
@@ -75,6 +75,29 @@ vll create_sfx_arr(string s)
 
 int main()
 {
-    
+    string s;
+    ll k;
+    cin >> s >> k;
+    ll n = s.size();
+    vll ans = create_sfx_arr(s);
+    for (auto i:ans) cout << i << " ";
+    cout << endl;
+    ll longest=-1;
+    for( ll i=0; i < ( n - k +1 ) ; i++  ){
+        ll j=i+k-1;
+        ll count=0;
+        ll p_i = ans[i];
+        ll p_j = ans[j];
+        while( (p_j < n) && ( p_i < n ) && s[p_i] == s[p_j]){
+            cout << p_i << " " << p_j << endl;
+            count++;
+            cout <<"COUNT : " << count << endl;
+            p_i++;
+            p_j++;
+        } 
+        if( count != 0 && longest < count ) longest = count;
+        cout << "##############" << endl;
+    }
+    cout << longest << endl;
     return 0;
 }

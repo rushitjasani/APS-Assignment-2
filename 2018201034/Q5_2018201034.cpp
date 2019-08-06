@@ -164,27 +164,27 @@ ll findSubstring(stringBuilder &s, const char *pattern)
 int main()
 {
     stringBuilder s1 = stringInitialize("abca");
-    // print(s1);
+    print(s1);
     stringBuilder s2 = stringInitialize("assssaabab");
-    // print(s2);
+    print(s2);
     stringBuilder s3 = stringInitialize("rushit");
-    // print(s3);
+    print(s3);
     stringBuilder s4 = stringInitialize("darshan");
-    // print(s4);
+    print(s4);
     stringBuilder s5 = stringAppend(s1, s2);
-    // print(s5);
+    print(s5);
     stringBuilder s6, s7;
     s1 = stringAppend(s6, s7);
-    // print(s1);
+    print(s1);
     s2 = stringAppend(s1, s2);
-    // print(s2);
+    print(s2);
     s2 = stringAppend(s2, s5);
-    // print(s2);
+    print(s2);
     ll x = findSubstring(s2, "abca");
-    // print(s2);
+    print(s2);
     cout << x << endl;
     ll y = findSubstring(s2, "orla");
-    // print(s2);
+    print(s2);
     cout << y << endl;
     return 0;
 }

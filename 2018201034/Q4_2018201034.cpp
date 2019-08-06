@@ -1,8 +1,8 @@
 // @auther : Rushit Jasani
-// problem : implementation of unordered set
+// problem : implementation of unordered map
 #include <bits/stdc++.h>
 using namespace std;
-#define BKT 5
+#define BKT 100
 
 template <class T, class U>
 class Unordered_map
@@ -185,9 +185,9 @@ class Unordered_map
 int main()
 {
     ios_base::sync_with_stdio(false);
-    int s;
-    long long val;
-    Unordered_map<int, int> x;
+    string s;
+    string val;
+    Unordered_map<string, string> x;
     while (1)
     {
         int c;
@@ -204,7 +204,7 @@ int main()
         case 2:
         {
             cin >> s;
-            pair<bool, int> ans = x.search(s);
+            pair<bool, string> ans = x.search(s);
             if (ans.first == true)
                 cout << ans.second << endl;
             else
@@ -223,8 +223,8 @@ int main()
             continue;
         }
         }
-        // x.print_all_LL();
-        cout << endl;
+        x.print_all_LL();
+         cout << endl;
     }
     return 0;
 }
